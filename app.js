@@ -29,6 +29,12 @@ function init() {
   let loader = new THREE.CubeTextureLoader();
   scene.background = loader.load(urls);
 
+  let sphereMaterial = new THREE.MeshBasicMaterial();
+  let sphereGeo = new THREE.SphereGeometry(350, 50, 50);
+  let sphere = new THREE.Mesh(sphereGeo, sphereMaterial);
+  sphere.position.set(0, 100, 0);
+  scene.add(sphere);
+
   render();
 }
 
