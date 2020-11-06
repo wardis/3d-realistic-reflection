@@ -1,4 +1,9 @@
-let scene, camera, renderer;
+let scene, camera, renderer, sphereCamera;
+const cubeRenderTarget = new THREE.WebGLCubeRenderTarget(500, {
+  // format: THREE.RGBFormat,
+  // generateMipmaps: true,
+  // minFilter: THREE.LinearMipmapLinearFilter,
+});
 
 function init() {
   scene = new THREE.Scene();
@@ -8,7 +13,7 @@ function init() {
     1,
     5000
   );
-  camera.position.set(0, 400, 1000);
+  camera.position.set(-700, 400, -1000);
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -29,11 +34,21 @@ function init() {
   let loader = new THREE.CubeTextureLoader();
   scene.background = loader.load(urls);
 
-  let sphereMaterial = new THREE.MeshBasicMaterial();
+  sphereCamera = new THREE.CubeCamera(1, 1000, cubeRenderTarget);
+  scene.add(sphereCamera);
+
+  let sphereMaterial = new THREE.MeshBasicMaterial({
+    envMap: scene.background,
+  });
   let sphereGeo = new THREE.SphereGeometry(350, 50, 50);
   let sphere = new THREE.Mesh(sphereGeo, sphereMaterial);
   sphere.position.set(0, 100, 0);
+  sphereCamera.position.copy(sphere.position);
+
   scene.add(sphere);
+
+  const axesHelper = new THREE.AxesHelper(20);
+  scene.add(axesHelper);
 
   render();
 }
